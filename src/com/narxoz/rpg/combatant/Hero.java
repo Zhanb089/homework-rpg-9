@@ -149,13 +149,11 @@ public class Hero {
         this.inventory = inventory == null ? new Inventory() : inventory;
     }
 
-    @Override
     public HeroMemento createMemento() {
         return new HeroMemento(
             name, hp, mana, gold, maxHp, attackPower, defense, inventory.getArtifacts());
     }
 
-    @Override
     public void restoreFromMemento(HeroMemento memento) {
         if (memento == null) return;
         this.hp        = memento.getHp();

@@ -1,0 +1,88 @@
+https://www.plantuml.com/plantuml/uml/dLN1RkD63BthAtXqi77QegSQWR61jzi4s6qNoQ9tHcAaWILIvL1Eqw95Fw9Vs2_fq9R7jhA-xCKUyf4pRzxZG6-ZeThGjV2HEc8J-8Hcf0np-1mwWfM-HCCs5d4Tk4V53ieMOxmnq_0u6DsLmW_X3u9lfoNlXMsBVFTzqOIAe0nQjbHOi9RWLZfw5bt33_3VF_--EdvsIohmO6W4z_GSkBeeYkssi4Mkht_HK0T64rqkuSy2OCxOqIBrQE3QuwPVG63pPOU_tnv7Z3cefQroW6POhZ_9CsdELVH472d7WJTELLyMSBTVUdwUVjuOhkaTTbZJ33iPs2uMi95GETOGjg-piIUkFYBZ0NeKQGdPKQogdnB1CsqPchP5iinjbWZdnf5cgOH6e-YpXBgeO-YuKZHHUg_IxOkwawBzXdzbLpBcveohyywSzsBgsTSuyy3OnqPi0Hz2jEiRjV24fIttz__xYEtCoLr2qr-2Sxa49t49LrTN5rvPa_sS2boZpD-Jjxsd0jiOkuEd6JVdD7CtvUVmX64MT8LAFasQvCphlQ1DYBi9V4U_3NHzT9rbzZZYXiwubj21goyPtnEjlv2EwHtlxt9WsAYmTCWbwOzS1oQdsWPY6tc-qO5_nQ6rMOzgB-DbVUzbscoBt0zyJp4jdFVZ4Dfgc_uWEtMoPFdOITjE3nprYpTzhnWY7OtHxXPnfOHsb1z7l5hvwzbbyoEMdTK7q_rqfvt6OdaowWlOFQK8ty2uOomEribyFYdVbO3qc8o3E0v2B5wBcSzANQ9bGz4KZSwM7avTW7kV6BcRwS-zFjCrLNC1IZOenw9WCG8DTMCWJvE1M0b7qw4qKK2ke2OpqfWGL88UopNMDEyrRD3eoXiokPbOGxglyJTM8hCOA67bDf0ojl6g8Ax0EOnC7iLCEgUIzqgzdrtzUA8nRcdmNk8DjWDjlp72xKk2-Y4shetq1uLylezFV9kMGzV-3m00
+@startuml Memento Pattern - Time Crystals
+skinparam classAttributeIconSize 0
+skinparam classFontSize 13
+hide circle
+title Homework 9 — Memento Pattern (Hero State Rewind)
+
+class Hero <<Originator>> {
+  -name: String
+  -hp: int
+  -maxHp: int
+  -mana: int
+  -gold: int
+  -attackPower: int
+  -defense: int
+  -inventory: Inventory
+  --
+  +takeDamage(amount): void
+  +heal(amount): void
+  +spendMana(amount): boolean
+  +addGold(amount): void
+  +spendGold(amount): boolean
+  +setInventory(inv): void
+  --
+  +createMemento(): HeroMemento
+  +restoreFromMemento(m: HeroMemento): void
+}
+
+class HeroMemento <<Memento>> {
+  -name: String
+  -hp: int
+  -mana: int
+  -gold: int
+  -maxHp: int
+  -attackPower: int
+  -defense: int
+  -inventorySnapshot: List<Artifact>
+  --
+  ~HeroMemento(name, hp, mana, gold, ...)
+  ~getName(): String
+  ~getHp(): int
+  ~getMana(): int
+  ~getGold(): int
+  ~getInventorySnapshot(): List<Artifact>
+}
+
+class Caretaker <<Caretaker>> {
+  -history: Deque<HeroMemento>
+  --
+  +save(m: HeroMemento): void
+  +undo(): HeroMemento
+  +peek(): HeroMemento
+  +size(): int
+}
+
+class ChronomancerEngine <<Client>> {
+  +runVault(party: List<Hero>): VaultRunResult
+  -buildVaultLoot(): Inventory
+}
+
+class VaultRunResult {
+  -artifactsAppraised: int
+  -mementosCreated: int
+  -restoredCount: int
+  --
+  +toString(): String
+}
+
+Hero ..> HeroMemento : creates / restores
+Caretaker o-- HeroMemento : stores opaque snapshots
+ChronomancerEngine ..> Hero : orchestrates
+ChronomancerEngine ..> Caretaker : save / peek / undo
+ChronomancerEngine ..> VaultRunResult : returns
+
+note right of HeroMemento
+  Constructor and getters
+  are package-private.
+  Caretaker (other package)
+  cannot read internals.
+end note
+
+note bottom of Caretaker
+  Treats HeroMemento as
+  an opaque value — only
+  push / pop / peek / size.
+end note
+
+@enduml

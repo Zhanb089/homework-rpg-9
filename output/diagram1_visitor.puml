@@ -1,0 +1,139 @@
+https://www.plantuml.com/plantuml/uml/nLPDR-Cs4BtpLmnogTE5rIvwgX4OwthRxWBjOj4KsKil4t8S4Q58WHp5y7u0_H7zXVqb9KLBLasxS4_98OBU6pu-3aSlUHKOFNUDWJiTD3iFxv6Pl8Kvh6llh6lGIl9V1RZ3ph08ZzgswB41QJ245RFNzntJM-dihVv8yErnoK_ESi-y_4xKMX58xQKXmPeDmHlNqDRvH_WU_lxphyB5RELPRr0ohDhMemveheNGDf8H9HZeOTqd0V3YARtCjeIjimluq3-l5_3aj3hGhMETwFVfMT91UcVC0cxxPq5xRHyMy5lyNL3e6-SNi4gFWVmY1Du7zYWvDsKqtZkUMsmexiL9Dhq_eUaYe2sdjotfXvh7rtdQwu7uNLmqknwNPV0kheneBixGXtxv1FiqUFa2A2MrFEkTPzVJVaxzPzkvcTaqCgDy_C7PBXJULWTkil6ussdnV1LPl2OqyLI5y9kCNowQBp2BXfQCUNVKwq7vDfFJdbuWdqOWYpVueENfRlmwKXVxplEJbHLjo0OwhVqwa_zJ_Qrz8Xk9tVugzzSUvN_HWM-6CLYEEw5I0pZ3mvmCmjdBW2OZfT2Be3zEH_F2sOkLqhMxj71qVJZ8pyweVJJGlbti64t2YrxzFZ075sDOd0-94WxdG-5a79Jz_z7A6YqtPFbMehNa9qE4Pkqwo-KOJSXdFy6wyu5U4vFaOKvbWjHfx-kHUtxhEH3NQ6HdCBc_kN4jsM-aST4ZjDwvpN8v6QQye1odaNlEC-L8Zgu-ByTFIAGeBS0SXKTW7s1m1ERmEGB58JIkNbw1cy_XwkkhaOS5rCweC2chgcNn5te1MpIF0T0O66D7Y7z_n_cdgZuNwqNvvPmfd0xeVoeMut2kK0p0cOFj0urh7Qx_iCfrzuP0wT0Yore8wvZWtZ6x1jnc4cO0HsaDEW3N1CwQ7RG69SMQFLdbAQYggY-JQ0ofAl8hfT9LMjeEfG6Kem3MSQGRf_Hc1sXtkUtZloAL8AjI4GdnYgpg6lCF
+@startuml Visitor Pattern - Chronomancer's Vault
+skinparam classAttributeIconSize 0
+skinparam classFontSize 13
+hide circle
+title Homework 9 — Visitor Pattern (Artifact Appraisal)
+
+interface ArtifactVisitor {
+  +visit(weapon: Weapon): void
+  +visit(potion: Potion): void
+  +visit(scroll: Scroll): void
+  +visit(ring: Ring): void
+  +visit(armor: Armor): void
+}
+
+abstract class Artifact {
+  -name: String
+  -value: int
+  -weight: int
+  --
+  +getName(): String
+  +getValue(): int
+  +getWeight(): int
+  +{abstract} accept(visitor: ArtifactVisitor): void
+}
+
+class Weapon {
+  -attackBonus: int
+  --
+  +getAttackBonus(): int
+  +accept(visitor): void
+}
+
+class Potion {
+  -healing: int
+  --
+  +getHealing(): int
+  +accept(visitor): void
+}
+
+class Scroll {
+  -spellName: String
+  --
+  +getSpellName(): String
+  +accept(visitor): void
+}
+
+class Ring {
+  -magicBonus: int
+  --
+  +getMagicBonus(): int
+  +accept(visitor): void
+}
+
+class Armor {
+  -defenseBonus: int
+  --
+  +getDefenseBonus(): int
+  +accept(visitor): void
+}
+
+class Inventory {
+  -artifacts: List<Artifact>
+  --
+  +addArtifact(a: Artifact): void
+  +getArtifacts(): List<Artifact>
+  +size(): int
+  +accept(visitor: ArtifactVisitor): void
+  +copy(): Inventory
+}
+
+class GoldAppraiser {
+  -totalGold: int
+  --
+  +getTotalGold(): int
+  +visit(weapon): void
+  +visit(potion): void
+  +visit(scroll): void
+  +visit(ring): void
+  +visit(armor): void
+}
+
+class EnchantmentScanner {
+  -magicalCount: int
+  --
+  +getMagicalCount(): int
+  +visit(weapon): void
+  +visit(potion): void
+  +visit(scroll): void
+  +visit(ring): void
+  +visit(armor): void
+}
+
+class CurseDetector {
+  -cursedCount: int
+  --
+  +getCursedCount(): int
+  +visit(weapon): void
+  +visit(potion): void
+  +visit(scroll): void
+  +visit(ring): void
+  +visit(armor): void
+}
+
+class WeightCalculator <<open/closed proof>> {
+  -totalWeight: int
+  --
+  +getTotalWeight(): int
+  +visit(weapon): void
+  +visit(potion): void
+  +visit(scroll): void
+  +visit(ring): void
+  +visit(armor): void
+}
+
+Weapon --|> Artifact
+Potion --|> Artifact
+Scroll --|> Artifact
+Ring   --|> Artifact
+Armor  --|> Artifact
+
+Inventory "1" o-- "*" Artifact : holds
+Inventory ..> ArtifactVisitor : walks all artifacts
+
+GoldAppraiser       ..|> ArtifactVisitor
+EnchantmentScanner  ..|> ArtifactVisitor
+CurseDetector       ..|> ArtifactVisitor
+WeightCalculator    ..|> ArtifactVisitor
+
+Artifact ..> ArtifactVisitor : accept(this)\ndouble dispatch
+
+note bottom of Inventory
+  accept(visitor) is the only place
+  visitor.visit(...) is called.
+  Adding new visitors does not
+  modify any artifact class.
+end note
+
+@enduml

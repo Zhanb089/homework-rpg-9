@@ -11,10 +11,8 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        System.out.println("=".repeat(60));
-        System.out.println("  HOMEWORK 9 — CHRONOMANCER'S VAULT");
+        System.out.println("  HOMEWORK 9 - CHRONOMANCER'S VAULT");
         System.out.println("  Visitor + Memento");
-        System.out.println("=".repeat(60));
 
         Inventory zhanibekStart = new Inventory();
         zhanibekStart.addArtifact(new Weapon("Iron Sword", 50, 8, 12));

@@ -149,24 +149,23 @@ public class Hero {
         this.inventory = inventory == null ? new Inventory() : inventory;
     }
 
-    /**
-     * Creates a memento placeholder for the hero's current state.
-     *
-     * @return a HeroMemento snapshot, or null in the scaffold
-     */
+    @Override
     public HeroMemento createMemento() {
-        // TODO: capture the full mutable state into a HeroMemento.
-        return null;
+        return new HeroMemento(
+            name, hp, mana, gold, maxHp, attackPower, defense, inventory.getArtifacts());
     }
 
-    /**
-     * Restores this hero from a previously captured memento.
-     *
-     * @param memento the snapshot to restore from
-     */
+    @Override
     public void restoreFromMemento(HeroMemento memento) {
-        // TODO: read the snapshot and restore the hero's mutable state.
-    }
+        if (memento == null) return;
+        this.hp        = memento.getHp();
+        this.mana      = memento.getMana();
+        this.gold      = memento.getGold();
+        this.inventory = new Inventory(memento.getInventorySnapshot());
+        System.out.println("  [" + name + "] state rewound from time crystal "
+                + "(HP: " + hp + ", Mana: " + mana + ", Gold: " + gold
+                + ", Inventory: " + inventory.size() + ")");
+        }   
 
     @Override
     public String toString() {
